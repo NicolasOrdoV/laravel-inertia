@@ -33,6 +33,7 @@ class CategoryController extends Controller
     public function store(Store $request)
     {
         Category::create($request->validated());
+        return redirect()->route('category.index');
     }
 
     /**
@@ -57,6 +58,7 @@ class CategoryController extends Controller
     public function update(Put $request, Category $category)
     {
         $category->update($request->validated());
+        return to_route('category.index')->with('success', 'Category updated successfully');
     }
 
     /**
