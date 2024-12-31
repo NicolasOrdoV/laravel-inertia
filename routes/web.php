@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Dashboard\CategoryController;
+use App\Http\Controllers\Dashboard\PostController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -20,6 +21,7 @@ Route::middleware([
     'verified',
 ])->prefix('dashboard')->group(function () {
     Route::resource('/category', CategoryController::class);
+    Route::resource('/post', PostController::class);
     Route::get('/', function () {
         return Inertia::render('Dashboard');
     })->name('dashboard');
