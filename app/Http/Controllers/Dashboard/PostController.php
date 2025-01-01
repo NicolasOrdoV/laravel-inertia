@@ -8,6 +8,7 @@ use App\Http\Requests\Post\Store;
 use App\Models\Category;
 use App\Models\Post;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 
 class PostController extends Controller
 {
@@ -34,7 +35,8 @@ class PostController extends Controller
      */
     public function store(Store $request)
     {
-        Post::create($request->validated());
+        $post = Post::create($request->validated());
+        $this->upload($request, $post);
         return redirect()->route('post.index');
     }
 
@@ -61,6 +63,7 @@ class PostController extends Controller
     public function update(Put $request, Post $post)
     {
         $post->update($request->validated());
+        $this->upload($request, $post);
         return to_route('post.index')->with('success', 'Post updated successfully');
     }
 
@@ -70,5 +73,22 @@ class PostController extends Controller
     public function destroy(Post $post)
     {
         $post->delete();
+    }
+
+    public function upload(Request $request, Post $post)
+    {
+        $request->validate(['image' => 'required|mimes:jpeg,png,jpg,gif,svg|max:1024']);
+        Storage::disk('public')->delete('image/post/' . $post->image);
+        $data['image'] = $filename = time() . '.' . $request->image->extension();
+        $request->image->move(public_path('image/post'),  $filename);
+        $post->update($data);
+        //return to_route('post.index')->with('success', 'Image uploaded successfully');
+    }
+
+    public function imageDelete(Post $post)
+    {
+        Storage::disk('public')->delete('image/post/' . $post->image);
+        $post->update(['image' => null]);
+        return to_route('post.edit', $post)->with('message', 'Image deleted successfully');
     }
 }

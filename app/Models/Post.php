@@ -16,7 +16,8 @@ class Post extends Model
         'description',
         'date',
         'posted',
-        'type'
+        'type',
+        'category_id'
     ];
 
     public function category()

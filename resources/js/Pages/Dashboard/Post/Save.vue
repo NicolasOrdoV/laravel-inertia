@@ -57,6 +57,40 @@
                         </select>
                         <InputError :message="errors.category_id" class="mt-2" />
                     </div>
+                    <div class="col-span-6">
+                        <InputLabel for="Image" value="Image" />
+                        <!-- <TextInput type="file" class="block w-full mt-1" @input="form.image = $event.taget.files[0]" />
+                        <InputError :message="errors.image" class="mt-2" /> -->
+
+                        <o-upload v-slot="{ onclick }" v-model="form.image">
+                            <o-button tag="upload-button" variant="primary" @click="onclick">
+                                <o-icon icon="upload" />
+                                <span>Click to upload</span>
+                            </o-button>
+                        </o-upload>
+                    </div>
+                    <div class="col-span-6">
+
+                        <o-upload v-model="dropFile" v-if="post.id" :max-size="5000000" :accept="['image/*']">
+                            <section class="">
+                                <o-icon icon="upload" />
+                                <span>Drop your file here or click to upload</span>
+                            </section>
+
+                        </o-upload>
+                    </div>
+
+                    <div class="container mt-4" v-if="post.image">
+                        <div class="card">
+                            <div class="card-body">
+                                <img :src="'/image/post/' + post.image" :alt="post.title"
+                                    class="rounded-md shadow-md max-w-xs" />
+                                <DangerButton @click="form.delete(route('post.image.delete', post.id))">Delete</DangerButton>
+                                <a class="my-2 t-2 link-button-default" :href="'/image/post/' + post.image" download>Download</a>
+                            </div>
+
+                        </div>
+                    </div>
                 </template>
 
                 <template #actions>
@@ -66,15 +100,34 @@
                 </template>
             </FormSection>
         </div>
+        <div v-if="post.id != ''" class="max-w-7xl mx-auto py-10 sm:px-6 lg:px-8">
+            <!-- <div class="container">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="grid grid-cols-2 gap-2">
+                            <InputLabel for="Image" value="Image" />
+                            <TextInput type="file" class="block w-full mt-1"
+                                @input="form.image = $event.taget.files[0]" />
+                            <InputError :message="errors.image" class="mt-2" />
+                            <PrimaryButton @click="upload">
+                                Upload
+                            </PrimaryButton>
+                        </div>
+                    </div>
+                </div>
+            </div> -->
+        </div>
     </AppLayout>
 </template>
 <script>
+import { watch, ref } from "vue";
 import { router, useForm } from "@inertiajs/vue3";
 import AppLayout from "@/Layouts/AppLayout.vue";
 import FormSection from '@/Components/FormSection.vue';
 import InputError from '@/Components/InputError.vue';
 import InputLabel from '@/Components/InputLabel.vue';
 import PrimaryButton from '@/Components/PrimaryButton.vue';
+import DangerButton from '@/Components/DangerButton.vue';
 import TextInput from '@/Components/TextInput.vue';
 
 
@@ -92,6 +145,7 @@ export default {
                 posted: "",
                 type: "",
                 category_id: "",
+                image: "",
             })
         }
     },
@@ -101,6 +155,7 @@ export default {
         InputError,
         InputLabel,
         PrimaryButton,
+        DangerButton,
         TextInput
     },
     setup(props) {
@@ -111,20 +166,41 @@ export default {
             date: props.post.date,
             posted: props.post.posted,
             type: props.post.type,
+            image: props.post.image,
         });
+
+        const dropFile = ref();
 
         function submit() {
             if (props.post.id) {
-                router.put(route("post.update", props.post.id), form);
+                //router.put(route("post.update", props.post.id), form);
+                router.post(route("post.update", props.post.id), {
+                    _method: "put",
+                    ...form
+                });
             } else {
                 router.post(route("post.store"), form);
             }
         }
 
+        function upload() {
+            router.post(route("post.upload", props.id), form);
+        }
+
+        watch(() => dropFile, (currentValue, oldValue) => {
+            router.post(route("post.upload", props.post.id), {
+                image: currentValue.value[currentValue.value.length - 1]
+            });
+        }, { deep: true });
+
         return {
             form,
             submit,
+            upload,
+            dropFile
         };
+
+
     }
 }
 </script>
