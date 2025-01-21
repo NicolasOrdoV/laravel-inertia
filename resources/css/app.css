@@ -18,3 +18,43 @@
     @apply inline-flex items-center px-4 py-2 bg-gray-800 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-gray-700 focus:bg-gray-700 active:bg-gray-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 disabled:opacity-50 transition ease-in-out duration-150;
 }
 
+/* transition for vue */
+/* CKEDITOR */
+.ck-editor__editable_inline {
+    min-height: 400px;
+}
+
+
+.ck-editor__main h1 {
+    font-size: 40px;
+}
+
+
+.ck-editor__main h2 {
+    font-size: 30px;
+}
+
+
+.ck-editor__main h3 {
+    font-size: 25px;
+}
+
+
+.ck-editor__main h4 {
+    font-size: 20px;
+}
+
+
+.ck-editor__main ul {
+    list-style-type: circle;
+    margin: 10px;
+    padding: 10px;
+}
+
+
+.ck-editor__main ol {
+    list-style-type: decimal;
+    margin: 10px;
+    padding: 10px;
+}
+/* CKEDITOR */

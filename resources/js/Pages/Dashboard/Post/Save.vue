@@ -31,6 +31,7 @@
                         <InputLabel for="description" value="Description" />
                         <textarea id="description" v-model="form.description" type="text"
                             class="block w-full mt-1 border-gray-300 rounded-md"></textarea>
+                        <!-- <ckeditor :editor="editor" v-model="form.text" :config="editorConfig" /> -->
                         <InputError :message="errors.description" class="mt-2" />
                     </div>
                     <div class="col-span-6">
@@ -85,8 +86,10 @@
                             <div class="card-body">
                                 <img :src="'/image/post/' + post.image" :alt="post.title"
                                     class="rounded-md shadow-md max-w-xs" />
-                                <DangerButton @click="form.delete(route('post.image.delete', post.id))">Delete</DangerButton>
-                                <a class="my-2 t-2 link-button-default" :href="'/image/post/' + post.image" download>Download</a>
+                                <DangerButton @click="form.delete(route('post.image.delete', post.id))">Delete
+                                </DangerButton>
+                                <a class="my-2 t-2 link-button-default" :href="'/image/post/' + post.image"
+                                    download>Download</a>
                             </div>
 
                         </div>
@@ -122,6 +125,7 @@
 <script>
 import { watch, ref } from "vue";
 import { router, useForm } from "@inertiajs/vue3";
+import { ClassicEditor, Bold, Essentials, Italic, Mention, Paragraph, Undo } from "ckeditor5";
 import AppLayout from "@/Layouts/AppLayout.vue";
 import FormSection from '@/Components/FormSection.vue';
 import InputError from '@/Components/InputError.vue';
@@ -130,8 +134,19 @@ import PrimaryButton from '@/Components/PrimaryButton.vue';
 import DangerButton from '@/Components/DangerButton.vue';
 import TextInput from '@/Components/TextInput.vue';
 
+import 'ckeditor5/ckeditor5.css'
 
 export default {
+    data() {
+        return {
+            editor: ClassicEditor,
+            editorData: '<p>Content of the editor.</p>',
+            editorConfig: {
+                plugins: [Essentials, Bold, Italic, Mention, Paragraph, Undo],
+                toolbar: ['bold', 'italic', 'undo']
+            }
+        }
+    },
     props: {
         errors: Object,
         categories: Array,
@@ -156,7 +171,8 @@ export default {
         InputLabel,
         PrimaryButton,
         DangerButton,
-        TextInput
+        TextInput,
+        ClassicEditor
     },
     setup(props) {
         const form = useForm({
