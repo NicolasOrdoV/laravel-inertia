@@ -1,5 +1,14 @@
 <template>
     <app-layout>
+        <o-modal v-model:active="confirmDeleteActive">
+            <p class="p-4">
+                Seguro que deseas eliminar el post?
+            </p>
+            <div class="p-3 bg-gray-100 flex flex-row-reverse gap-3">
+                <o-button variant="danger" @click="deletePost()">Delete</o-button>
+                <o-button @click="confirmDeleteActive = false">Cancel</o-button>
+            </div>
+        </o-modal>
         <div class="container">
             <div class="card">
                 <div class="card-body">
@@ -21,12 +30,13 @@
                                 <td class="border p-3">{{ post.slug }}</td>
                                 <td class="border p-3">{{ post.description }}</td>
                                 <td class="border p-3">
-                                    <Link :href="route('post.edit', post.id)"
-                                        class="link-button-default">
+                                    <Link :href="route('post.edit', post.id)" class="link-button-default">
                                     Edit</Link>
-                                    <Link as="button" type="button" method="DELETE" :href="route('post.destroy', post.id)"
-                                        class="link-button-default">
-                                    Delete</Link>
+                                    <!-- <Link as="button" type="button" method="DELETE"
+                                        :href="route('post.destroy', post.id)" class="link-button-default">
+                                    Delete</Link> -->
+                                    <o-button variant="danger" size="small"
+                                        @click="confirmDeleteActive = true; deletePostRow = post.id">Delete</o-button>
                                 </td>
                             </tr>
                         </tbody>
@@ -40,7 +50,7 @@
     </app-layout>
 </template>
 <script>
-import { Link } from "@inertiajs/vue3";
+import { Link, router } from "@inertiajs/vue3";
 import AppLayout from "@/Layouts/AppLayout.vue";
 import Pagination from "@/Shared/Pagination.vue";
 
@@ -53,5 +63,17 @@ export default {
     props: {
         posts: Object,
     },
+    data() {
+        return {
+            confirmDeleteActive: false,
+            deletePostRow: "",
+        }
+    },
+    methods: {
+        deletePost() {
+            router.delete(route('post.destroy', this.deletePostRow));
+            this.confirmDeleteActive = false;
+        }
+    }
 }
 </script>
