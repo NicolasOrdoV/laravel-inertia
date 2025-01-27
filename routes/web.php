@@ -1,7 +1,11 @@
 <?php
 
+use App\Http\Controllers\CompanyController;
+use App\Http\Controllers\Contact\GeneralController;
 use App\Http\Controllers\Dashboard\CategoryController;
 use App\Http\Controllers\Dashboard\PostController;
+use App\Http\Controllers\DetailController;
+use App\Http\Controllers\PersonController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -29,5 +33,38 @@ Route::middleware([
     })->name('dashboard');
 });
 
-// Route::inertia('indexinertia', 'Dashboard/Post/Index');
+Route::group([
+    'prefix' => 'contact',
+    // 'middleware' => [
+    //     'auth:sanctum',
+    //     config('jetstream.auth_session'),
+    //     'verified'
+    // ]
+], function () {
+    Route::resource('contact-general', GeneralController::class)->only([
+        'create',
+        'edit',
+        'store',
+        'update'
+    ]);
+    Route::resource('contact-company', CompanyController::class)->only([
+        'create',
+        'edit',
+        'store',
+        'update'
+    ]);
+    Route::resource('contact-person', PersonController::class)->only([
+        'create',
+        'edit',
+        'store',
+        'update'
+    ]);
+    Route::resource('contact-detail', DetailController::class)->only([
+        'create',
+        'edit',
+        'store',
+        'update'
+    ]);
+});
 
+// Route::inertia('indexinertia', 'Dashboard/Post/Index');
