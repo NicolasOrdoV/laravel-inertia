@@ -13,6 +13,14 @@ use Illuminate\Support\Facades\Storage;
 
 class PostController extends Controller
 {
+    public $columns = [
+        'id' => 'ID',
+        'title' => 'Title',
+        'date' => 'Date',
+        'category_id' => 'Category',
+        'description' => 'Description',
+        'posted' => 'Posted',
+    ];
     /**
      * Display a listing of the resource.
      */
@@ -29,6 +37,10 @@ class PostController extends Controller
         $from = request('from');
         $to = request('to');
         $search = request('search');
+
+        //----Ordenacion----//
+        $sortColumn = request('sort_column', 'id');
+        $sortDirection = request('sort_direction', 'desc');
 
         // $posts = Post::when(request('search'), function (Builder $query, string $search) {
         //     $query->where(function($query) use ($search) {
@@ -70,9 +82,10 @@ class PostController extends Controller
             $posts = $posts->whereBetween('date', [date(request('from')), date(request('to'))]);
         }
 
-        $posts = $posts->with('category')->paginate(20);
+        $posts = $posts->with('category')->orderBy($sortColumn, $sortDirection)->paginate(20);
         //return inertia('Dashboard/Post/Index', compact('posts', 'categories'));
         return inertia('Dashboard/Post/Index', [
+            'columns' => $this->columns,
             'posts' => $posts,
             'categories' => $categories,
             'prop_type' => $type,
@@ -80,7 +93,9 @@ class PostController extends Controller
             'prop_posted' => $posted,
             'prop_from' => $from,
             'prop_to' => $to,
-            'porp_search' => $search
+            'prop_search' => $search,
+            'prop_sort_column' => $sortColumn,
+            'prop_sort_direction' => $sortDirection,
         ]);
     }
 
