@@ -67,4 +67,9 @@ Route::group([
     ]);
 });
 
+Route::group(['prefix' => 'blog'], function() {
+    Route::get('/', [App\Http\Controllers\Blog\PostController::class, 'index'])->name('web.index');
+    Route::get('/{post:slug}', [App\Http\Controllers\Blog\PostController::class, 'show'])->name('web.show');
+});
+
 // Route::inertia('indexinertia', 'Dashboard/Post/Index');

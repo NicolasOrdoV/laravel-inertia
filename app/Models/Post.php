@@ -20,6 +20,8 @@ class Post extends Model
         'category_id'
     ];
 
+    //protected $with = ['category'];
+
     public function category()
     {
         return $this->belongsTo(Category::class);
@@ -30,7 +32,8 @@ class Post extends Model
         return $this->morphToMany(Tag::class, 'taggables');
     }
 
-    public function getImageUrl () {
-        return URL::asset('images/post/'.$this->image);
+    public function getImageUrl()
+    {
+        return URL::asset('images/post/' . $this->image);
     }
 }
