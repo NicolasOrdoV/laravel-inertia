@@ -22,6 +22,11 @@
 
                     <div v-html="post.text" class="my-5"></div>
 
+                    <template v-if="post.type == 'advert'">
+                        <Cart></Cart>
+                        <CardItem :post="post" />
+                    </template>
+
                     <hr />
                     <br>
 
@@ -34,6 +39,8 @@
 <script>
 import WebLayout from "@/Layouts/WebLayout.vue";
 import GeneralStep from "@/Pages/Contact/General/Step.vue";
+import Cart from "@/Fragment/Cart.vue";
+import CardItem from "@/Fragment/CartItem.vue";
 
 export default {
     data() {
@@ -41,7 +48,9 @@ export default {
     },
     components: {
         WebLayout,
-        GeneralStep
+        GeneralStep,
+        Cart,
+        CardItem,
     },
     props: {
         post: Object,
