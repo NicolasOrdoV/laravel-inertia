@@ -2,21 +2,21 @@
 
     <app-layout>
         <confirmation-modal :show="confirmDeleteActive">
-        <template v-slot:title>
-            Confirmation
-        </template>
+            <template v-slot:title>
+                Confirmation
+            </template>
 
-        <template v-slot:content>
-            <p>Are you sure you want to delete the selected record?</p>
-        </template>
+            <template v-slot:content>
+                <p>Are you sure you want to delete the selected record?</p>
+            </template>
 
-        <template v-slot:footer>
-            <div class="flex flex-row-reverse bg-gray-100 gap-3">
-                <o-button @click="deleteCategory()" variant="danger">Delete</o-button>
-                <o-button @click="confirmDeleteActive = false">Cancel</o-button>
-            </div>
-        </template>
-    </confirmation-modal>
+            <template v-slot:footer>
+                <div class="flex flex-row-reverse bg-gray-100 gap-3">
+                    <o-button @click="deleteCategory()" variant="danger">Delete</o-button>
+                    <o-button @click="confirmDeleteActive = false">Cancel</o-button>
+                </div>
+            </template>
+        </confirmation-modal>
         <!-- <o-modal v-model:active="confirmDeleteActive">
             <p class="p-4">
                 Seguro que deseas eliminar la categoría?
